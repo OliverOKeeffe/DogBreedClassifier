@@ -1,0 +1,15 @@
+# Ignore dataset
+data/
+
+# Ignore trained models
+saved_models/
+
+# Ignore Python environment folders
+venv/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore other OS files
+.DS_Store
+Thumbs.db
