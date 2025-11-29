@@ -13,3 +13,6 @@ venv/
 # Ignore other OS files
 .DS_Store
 Thumbs.db
+
+# Ignore CA brief
+CA2 Artificial Intelligence.pdf
