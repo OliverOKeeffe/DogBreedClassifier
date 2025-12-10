@@ -1,6 +1,9 @@
 # Ignore dataset
 data/
 
+# Ignore trained models
+saved_models/
+
 # Ignore Python environment folders
 venv/
 
