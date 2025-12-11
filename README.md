@@ -1,3 +1,171 @@
 # Dog Breed Classifier
 
-Initial commit.
+A deep learning project that classifies dog breeds using a Convolutional Neural Network (CNN) with transfer learning. The model is trained on 70 different dog breeds and deployed as an interactive web application.
+
+## Features
+
+- **CNN Model**: Uses MobileNetV2 for efficient transfer learning
+- **70 Dog Breeds**: Classified with high accuracy
+- **Web Interface**: Easy-to-use Streamlit application
+- **Model Checkpointing**: Saves the best model during training
+- **Early Stopping**: Prevents overfitting
+
+## Project Structure
+
+```
+DogBreedClassifier/
+├── app/
+│   └── app.py                 # Streamlit web application
+├── data/
+│   └── AI-CA-Data/
+│       ├── train/             # Training images (70 breed folders)
+│       ├── valid/             # Validation images
+│       └── test/              # Test images
+├── notebooks/
+│   └── train_cnn.ipynb        # Training notebook
+├── saved_models/
+│   └── best_model.h5          # Trained model weights
+├── src/
+│   └── predict.py             # Prediction script
+├── requirements.txt           # Python dependencies
+└── README.md
+```
+
+## Prerequisites
+
+- Python 3.8 or higher
+- pip (Python package manager)
+- 2GB+ free disk space (for model and data)
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/OliverOKeeffe/DogBreedClassifier.git
+cd DogBreedClassifier
+```
+
+### 2. Create a Virtual Environment
+
+**Windows:**
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+**Mac/Linux:**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs:
+
+- TensorFlow/Keras
+- NumPy
+- Matplotlib
+- Pillow (PIL)
+- Streamlit
+
+## Running the Project
+
+### Option 1: Web Application (Recommended)
+
+```bash
+streamlit run app/app.py
+```
+
+The web app will open in your browser at `http://localhost:8501`
+
+### Option 2: Use the Prediction Script
+
+```bash
+python src/predict.py
+```
+
+Make sure you have a test image at the path specified in the script.
+
+### Option 3: Train the Model (Advanced)
+
+Open the Jupyter notebook:
+
+```bash
+jupyter notebook notebooks/train_cnn.ipynb
+```
+
+Follow the cells to:
+
+1. Load and preprocess data
+2. Build the CNN model
+3. Train the model
+4. Evaluate on test data
+
+## Usage
+
+1. **Web App**: Upload an image of a dog, and the model will predict the breed and confidence score
+2. **Script**: Modify `predict.py` to point to your image path and run it
+3. **Notebook**: Train your own model with different hyperparameters
+
+## Model Details
+
+- **Base Model**: MobileNetV2 (pre-trained on ImageNet)
+- **Input Size**: 224×224 pixels
+- **Output**: 70 dog breed classes
+- **Training Parameters**:
+  - Epochs: 10-15
+  - Batch Size: 32
+  - Optimizer: Adam
+  - Loss: Categorical Cross-entropy
+
+## Dataset
+
+The model is trained on the AI-CA-Data dataset with 70 dog breed categories:
+
+- Afghan, Beagle, Bulldog, Chihuahua, Golden Retriever, Labrador, Poodle, Rottweiler, Siberian Husky, and more...
+
+## Troubleshooting
+
+**Issue**: `ModuleNotFoundError: No module named 'tensorflow'`
+
+- Solution: Reinstall dependencies with `pip install -r requirements.txt`
+
+**Issue**: Out of memory errors during training
+
+- Solution: Reduce `batch_size` in the notebook or use GPU acceleration
+
+**Issue**: Model file not found
+
+- Solution: Ensure `best_model.h5` exists in `saved_models/` directory
+
+## Performance
+
+- Validation Accuracy: ~85-90%
+- Training Time: ~10-15 minutes (on CPU)
+
+## Future Improvements
+
+- Fine-tune the model with more epochs
+- Add confidence threshold filtering
+- Support for multiple dog detection
+- Mobile app deployment
+
+## License
+
+This project is open source and available for educational purposes.
+
+## Author
+
+Oliver O'Keeffe
+
+---
+
+**Questions?** Feel free to open an issue on GitHub!
