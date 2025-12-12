@@ -16,32 +16,45 @@ st.markdown(
       /* Force Jacques Francois on ALL text */
       * { font-family: 'Jacques Francois', serif !important; }
       
-      /* Page background - white */
-      .stApp { 
-        background: #ffffff; 
-        padding: 0;
-        font-family: 'Jacques Francois', serif !important;
-        color: #333333;
-      }
+            /* Page background - white */
+            .stApp { 
+                background: #ffffff; 
+                padding: 0;
+                padding-top: 5.25rem; /* reserve space for fixed header */
+                font-family: 'Jacques Francois', serif !important;
+                color: #333333;
+            }
       
-      /* Green header bar */
-      .header-bar {
-        background: #90EE90;
-        padding: 1.5rem;
-        text-align: center;
-        margin: 0 0 2rem 0;
-        border-radius: 0;
-      }
+            /* Green header bar - fixed to top */
+            .header-bar {
+                background: #90EE90;
+                padding: 0.75rem 1.5rem;
+                text-align: center;
+                margin: 0;
+                border-radius: 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 5rem; /* consistent header height */
+            }
       
-      /* Title in header */
-      h1 { 
-        color: #1a1a1a; 
-        font-family: 'Jacques Francois', serif !important; 
-        background: #90EE90;
-        padding: 1.5rem;
-        margin: -1rem -1rem 0 -1rem;
-        text-align: center;
-      }
+            /* Title in header */
+            h1 { 
+                color: #1a1a1a; 
+                font-family: 'Jacques Francois', serif !important; 
+                background: #90EE90; /* restore green background */
+                padding: 0.5rem 1rem;
+                margin: 0;
+                text-align: center;
+                line-height: 1;
+                font-size: 1.75rem;
+                border-radius: 4px;
+            }
       
       /* Headings */
       h2 { color: #333333; font-family: 'Jacques Francois', serif !important; }
