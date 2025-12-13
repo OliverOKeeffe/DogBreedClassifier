@@ -84,15 +84,13 @@ st.markdown(
 st.title("🐶 Dog Breed Classifier")
 st.markdown("### Upload an image of a dog and the model will predict its breed.")
 
-# MODEL PATH
-MODEL_PATH = "saved_models/best_model.h5"
+# Single model configuration (reverted to original behavior)
+DEFAULT_MODEL_PATH = "saved_models/best_model.h5"
 
 
 @st.cache_resource
 def load_model(path: str):
     return tf.keras.models.load_model(path)
-
-model = load_model(MODEL_PATH)
 
 # CLASS NAMES (match training order)
 class_names = [
@@ -188,7 +186,9 @@ def predict_top_k(preprocessed_image, model, class_names, top_k=3):
     return [(class_names[i], float(probs[i])) for i in top_idx]
 
 
-# UI: Top-K selector in the sidebar
+# UI: Top-K selector in the sidebar (fixed single model)
+model = load_model(DEFAULT_MODEL_PATH)
+
 top_k = st.sidebar.slider("Top Dog Breeds", min_value=1, max_value=10, value=3)
 
 st.markdown("#### Choose a dog image...")

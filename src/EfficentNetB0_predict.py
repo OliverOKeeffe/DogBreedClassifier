@@ -2,8 +2,15 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 
+# If you trained EfficientNet with preprocess_input, set USE_EFFICIENTNET_PREPROCESS = True
+from tensorflow.keras.applications.efficientnet import preprocess_input as effnet_preprocess
+
+# If you trained with only rescale=1./255 (most common in your notebooks), leave this False.
+# If you trained with tf.keras.applications.efficientnet.preprocess_input, set to True.
+USE_EFFICIENTNET_PREPROCESS = False
+
 # LOAD MODEL
-MODEL_PATH = "saved_models/best_model_efficientnetb0.h5"
+MODEL_PATH = "saved_models/best_model_2.h5"
 model = tf.keras.models.load_model(MODEL_PATH)
 
 # CLASS NAMES (in the same order as training)
@@ -81,24 +88,33 @@ class_names = [
 ]
 
 def preprocess_image(image_path):
-    img = Image.open(image_path).resize((224, 224))
-    img_array = np.array(img) / 255.0
-    return np.expand_dims(img_array, axis=0)
+    img = Image.open(image_path).convert("RGB").resize((224, 224))
+    arr = np.array(img)
+    if USE_EFFICIENTNET_PREPROCESS:
+        arr = effnet_preprocess(arr)
+    else:
+        arr = arr / 255.0
+    return np.expand_dims(arr, axis=0)
 
-def predict_breed(image_path):
+def predict_breed(image_path, top_k=5):
     img = preprocess_image(image_path)
     preds = model.predict(img)
-    
-    class_idx = np.argmax(preds[0])
-    confidence = float(np.max(preds[0]))
-    breed = class_names[class_idx]
+    probs = tf.nn.softmax(preds[0]).numpy()
 
-    return breed, confidence
+    top_idx = probs.argsort()[-top_k:][::-1]
+    top = [(class_names[i], float(probs[i])) for i in top_idx]
+
+    # primary prediction
+    breed, confidence = top[0]
+    return breed, confidence, top
 
 
 if __name__ == "__main__":
-    test_image = "test_image.jpeg"
-    breed, confidence = predict_breed(test_image)
-    
+    test_image = "test_image.jpeg"  # update to a real image path
+    breed, confidence, top = predict_breed(test_image, top_k=5)
+
     print(f"Predicted Breed: {breed}")
-    print(f"Confidence: {confidence:.2f}")
+    print(f"Confidence: {confidence:.2%}")
+    print("Top-5:")
+    for name, p in top:
+        print(f"  {name}: {p:.2%}")
