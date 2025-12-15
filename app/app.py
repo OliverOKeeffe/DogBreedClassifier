@@ -16,49 +16,31 @@ st.markdown(
       /* Force Jacques Francois on ALL text */
       * { font-family: 'Jacques Francois', serif !important; }
       
-            /* Page background - white */
-            .stApp { 
-                background: #ffffff; 
-                padding: 0;
-                padding-top: 5.25rem; /* reserve space for fixed header */
-                font-family: 'Jacques Francois', serif !important;
-                color: #333333;
-            }
+      /* Page background - white */
+      .stApp { 
+          background: #ffffff; 
+          padding: 0;
+          padding-top: 1rem;
+          font-family: 'Jacques Francois', serif !important;
+          color: #333333;
+      }
       
-            /* Green header bar - fixed to top */
-            .header-bar {
-                background: #90EE90;
-                padding: 0.75rem 1.5rem;
-                text-align: center;
-                margin: 0;
-                border-radius: 0;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 5rem; /* consistent header height */
-            }
-      
-            /* Title in header */
-            h1 { 
-                color: #1a1a1a; 
-                font-family: 'Jacques Francois', serif !important; 
-                background: #90EE90; /* restore green background */
-                padding: 0.5rem 1rem;
-                margin: 0;
-                text-align: center;
-                line-height: 1;
-                font-size: 1.75rem;
-                border-radius: 4px;
-            }
+      /* Title styling */
+      h1 { 
+          color: #1a1a1a; 
+          font-family: 'Jacques Francois', serif !important; 
+          background: #90EE90;
+          padding: 1rem 1.5rem;
+          margin: -1rem -1rem 1.5rem -1rem;
+          text-align: center;
+          line-height: 1.4;
+          font-size: 2rem;
+          border-radius: 8px;
+      }
       
       /* Headings */
-      h2 { color: #333333; font-family: 'Jacques Francois', serif !important; }
-      h3 { color: #333333; font-family: 'Jacques Francois', serif !important; }
+      h2 { color: #333333; font-family: 'Jacques Francois', serif !important; margin-top: 1.5rem; }
+      h3 { color: #333333; font-family: 'Jacques Francois', serif !important; margin-top: 1rem; }
       
       /* Text color */
       p { color: #333333; font-family: 'Jacques Francois', serif !important; }
@@ -66,15 +48,36 @@ st.markdown(
       /* Markdown text */
       .stMarkdown { font-family: 'Jacques Francois', serif !important; color: #333333; }
       
+      /* Sidebar styling */
+      section[data-testid="stSidebar"] {
+          background: #f8f9fa;
+          padding-top: 2rem;
+      }
+      
+      section[data-testid="stSidebar"] > div {
+          padding-top: 2rem;
+      }
+      
       /* Buttons */
       .stButton>button { 
         background: #90EE90; 
         color: #000;
         border: none; 
-        padding: 8px 14px; 
+        padding: 10px 20px; 
         border-radius: 6px;
         font-family: 'Jacques Francois', serif !important;
         font-weight: 600;
+      }
+      
+      /* File uploader */
+      .stFileUploader {
+          margin: 1rem 0;
+      }
+      
+      /* Images */
+      img {
+          border-radius: 8px;
+          margin: 1rem 0;
       }
     </style>
     """,
@@ -84,8 +87,11 @@ st.markdown(
 st.title("🐶 Dog Breed Classifier")
 st.markdown("### Upload an image of a dog and the model will predict its breed.")
 
-# Single model configuration (reverted to original behavior)
-DEFAULT_MODEL_PATH = "saved_models/best_model.h5"
+# Available models
+MODELS = {
+    "MobileNetV2": "saved_models/best_model.h5",
+    "EfficientNetB0": "saved_models/efficientnet_best_model.h5"
+}
 
 
 @st.cache_resource
@@ -167,7 +173,7 @@ class_names = [
 ]
 
 
-def preprocess(img: Image.Image, target_size=(224, 224)):
+def preprocess(img: Image.Image, model_name: str, target_size=(224, 224)):
     img = img.convert("RGB")
     # Use LANCZOS resampling; Pillow 10+ uses Image.Resampling
     if hasattr(Image, "Resampling"):
@@ -175,7 +181,15 @@ def preprocess(img: Image.Image, target_size=(224, 224)):
     else:
         resample = Image.LANCZOS
     img = ImageOps.fit(img, target_size, method=resample)
-    arr = np.array(img) / 255.0
+    arr = np.array(img)
+    
+    # Apply model-specific preprocessing
+    if model_name == "EfficientNetB0":
+        from tensorflow.keras.applications.efficientnet_v2 import preprocess_input # type: ignore
+        arr = preprocess_input(arr)
+    else:  # MobileNetV2 and default
+        arr = arr / 255.0
+    
     return np.expand_dims(arr, axis=0)
 
 
@@ -186,8 +200,10 @@ def predict_top_k(preprocessed_image, model, class_names, top_k=3):
     return [(class_names[i], float(probs[i])) for i in top_idx]
 
 
-# UI: Top-K selector in the sidebar (fixed single model)
-model = load_model(DEFAULT_MODEL_PATH)
+# UI: Model selector and Top-K selector in the sidebar
+selected_model_name = st.sidebar.selectbox("Choose Model", list(MODELS.keys()))
+model_path = MODELS[selected_model_name]
+model = load_model(model_path)
 
 top_k = st.sidebar.slider("Top Dog Breeds", min_value=1, max_value=10, value=3)
 
@@ -198,7 +214,7 @@ if uploaded_file:
     img = Image.open(uploaded_file)
     st.image(img, caption="Uploaded Image", use_column_width=True)
 
-    processed = preprocess(img)
+    processed = preprocess(img, selected_model_name)
 
     with st.spinner("Predicting..."):
         results = predict_top_k(processed, model, class_names, top_k=top_k)
