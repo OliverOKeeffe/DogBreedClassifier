@@ -1,6 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras.applications import EfficientNetB0
-from tensorflow.keras.applications.efficientnet import preprocess_input
+from tensorflow.keras.applications.efficientnet_v2 import preprocess_input # type: ignore
 import numpy as np
 from PIL import Image
 
