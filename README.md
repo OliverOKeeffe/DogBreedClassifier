@@ -133,7 +133,7 @@ Follow the cells to:
 
 ## Model Details
 
-- **Base Model**: MobileNetV2 (pre-trained on ImageNet)
+- **Base Models**: MobileNetV2 and EfficientNetB0 (pre-trained on ImageNet)
 - **Input Size**: 224×224 pixels
 - **Output**: 70 dog breed classes
 - **Training Parameters**:
