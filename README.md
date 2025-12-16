@@ -4,9 +4,9 @@ A deep learning project that classifies dog breeds using a Convolutional Neural 
 
 ## Features
 
-- **CNN Model**: Uses MobileNetV2 for efficient transfer learning
+- **CNN Models**: MobileNetV2 and EfficientNetB0 available in the Streamlit app
 - **70 Dog Breeds**: Classified with high accuracy
-- **Web Interface**: Easy-to-use Streamlit application
+- **Web Interface**: Easy-to-use Streamlit application with model selection and Top-K control
 - **Model Checkpointing**: Saves the best model during training
 - **Early Stopping**: Prevents overfitting
 
@@ -22,11 +22,16 @@ DogBreedClassifier/
 │       ├── valid/             # Validation images
 │       └── test/              # Test images
 ├── notebooks/
-│   └── train_cnn.ipynb        # Training notebook
+│   ├── train_cnn_MobileNet.ipynb                 # MobileNetV2 training
+│   ├── train_cnn_EfficientNetB0.ipynb            # EfficientNetB0 training
+│   └── train_cnn_EfficientNetV2B0_mobileNetStyle.ipynb # EfficientNetV2B0 (MobileNet-style) training
 ├── saved_models/
-│   └── best_model.h5          # Trained model weights
+│   ├── best_model.h5                              # MobileNetV2 weights
+│   └── efficientnet_best_model.h5                 # EfficientNetB0 weights
 ├── src/
-│   └── predict.py             # Prediction script
+│   ├── MobileNet_predict.py                       # MobileNetV2 prediction script
+│   ├── EfficentNetB0_predict.py                   # EfficientNetB0 prediction script
+│   └── EfficientNetV2B0_predict.py                # EfficientNetV2B0 prediction script
 ├── requirements.txt           # Python dependencies
 └── README.md
 ```
@@ -84,15 +89,26 @@ This installs:
 streamlit run app/app.py
 ```
 
-The web app will open in your browser at `http://localhost:8501`
+The web app will open in your browser at `http://localhost:8501`. Use the sidebar to select **MobileNetV2** or **EfficientNetB0** and choose the Top-K output.
 
 ### Option 2: Use the Prediction Script
 
-```bash
-python src/predict.py
-```
+Pick the script for your model:
 
-Make sure you have a test image at the path specified in the script.
+- MobileNetV2:
+  ```bash
+  python src/MobileNet_predict.py path/to/image.jpg
+  ```
+- EfficientNetB0:
+  ```bash
+  python src/EfficentNetB0_predict.py path/to/image.jpg
+  ```
+- EfficientNetV2B0:
+  ```bash
+  python src/EfficientNetV2B0_predict.py path/to/image.jpg
+  ```
+
+Adjust the `--model` argument if you saved checkpoints under a different name.
 
 ### Option 3: Train the Model (Advanced)
 
