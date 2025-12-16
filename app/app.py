@@ -3,7 +3,13 @@ from PIL import Image, ImageOps
 import numpy as np
 import tensorflow as tf
 
-st.set_page_config(page_title="Dog Breed Classifier", page_icon="🐶", layout="centered")
+st.set_page_config(
+    page_title="Dog Breed Classifier", 
+    page_icon="🐶", 
+    layout="centered",
+    initial_sidebar_state="expanded",
+    menu_items=None
+)
 
 # -------------------------
 # Styling: Colors & Fonts
@@ -13,6 +19,17 @@ st.markdown(
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Jacques+Francois&display=swap');
       
+      /* Hide Streamlit toolbar completely */
+      header[data-testid="stHeader"] {
+          display: none !important;
+          visibility: hidden !important;
+          height: 0 !important;
+      }
+      
+      .stApp > header {
+          display: none !important;
+      }
+      
       /* Force Jacques Francois on ALL text */
       * { font-family: 'Jacques Francois', serif !important; }
       
@@ -20,22 +37,36 @@ st.markdown(
       .stApp { 
           background: #ffffff; 
           padding: 0;
-          padding-top: 1rem;
+          padding-top: 0;
           font-family: 'Jacques Francois', serif !important;
           color: #333333;
       }
       
-      /* Title styling */
+      /* Remove default Streamlit container padding */
+      .block-container {
+          padding-top: 8rem !important;
+          padding-left: 2rem !important;
+          padding-right: 2rem !important;
+      }
+      
+      /* Title styling - full-width green header bar using position fixed */
       h1 { 
           color: #1a1a1a; 
           font-family: 'Jacques Francois', serif !important; 
           background: #90EE90;
-          padding: 1rem 1.5rem;
-          margin: -1rem -1rem 1.5rem -1rem;
+          padding: 1.5rem 2rem;
+          margin: 0;
           text-align: center;
           line-height: 1.4;
-          font-size: 2rem;
-          border-radius: 8px;
+          font-size: 2.2rem;
+          border-radius: 0;
+          position: fixed;
+          top: 0;
+          left: 7rem;
+          right: 0;
+          width: 100%;
+          z-index: 999;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
       
       /* Headings */
@@ -56,6 +87,27 @@ st.markdown(
       
       section[data-testid="stSidebar"] > div {
           padding-top: 2rem;
+      }
+      
+      /* Hide sidebar collapse button to keep sidebar always visible */
+      button[kind="header"] {
+          display: none !important;
+      }
+      
+      button[kind="headerNoPadding"] {
+          display: none !important;
+      }
+      
+      [data-testid="collapsedControl"] {
+          display: none !important;
+      }
+      
+      [data-testid="stSidebarCollapseButton"] {
+          display: none !important;
+      }
+      
+      section[data-testid="stSidebar"] button[aria-label*="Close"] {
+          display: none !important;
       }
       
       /* Buttons */
