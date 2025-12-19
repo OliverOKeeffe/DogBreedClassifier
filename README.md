@@ -23,15 +23,13 @@ DogBreedClassifier/
 │       └── test/              # Test images
 ├── notebooks/
 │   ├── train_cnn_MobileNet.ipynb                 # MobileNetV2 training
-│   ├── train_cnn_EfficientNetB0.ipynb            # EfficientNetB0 training
-│   └── train_cnn_EfficientNetV2B0_mobileNetStyle.ipynb # EfficientNetV2B0 (MobileNet-style) training
+│   └── train_cnn_EfficientNetB0.ipynb            # EfficientNetB0 training
 ├── saved_models/
 │   ├── best_model.h5                              # MobileNetV2 weights
 │   └── efficientnet_best_model.h5                 # EfficientNetB0 weights
 ├── src/
 │   ├── MobileNet_predict.py                       # MobileNetV2 prediction script
-│   ├── EfficentNetB0_predict.py                   # EfficientNetB0 prediction script
-│   └── EfficientNetV2B0_predict.py                # EfficientNetV2B0 prediction script
+│   └── EfficentNetB0_predict.py                   # EfficientNetB0 prediction script
 ├── requirements.txt           # Python dependencies
 └── README.md
 ```
@@ -77,7 +75,10 @@ This installs:
 
 - TensorFlow/Keras
 - NumPy
+- Pandas
 - Matplotlib
+- Scikit-learn
+- OpenCV
 - Pillow (PIL)
 - Streamlit
 
@@ -103,19 +104,21 @@ Pick the script for your model:
   ```bash
   python src/EfficentNetB0_predict.py path/to/image.jpg
   ```
-- EfficientNetV2B0:
-  ```bash
-  python src/EfficientNetV2B0_predict.py path/to/image.jpg
-  ```
 
 Adjust the `--model` argument if you saved checkpoints under a different name.
 
 ### Option 3: Train the Model (Advanced)
 
-Open the Jupyter notebook:
+Open the Jupyter notebooks:
 
 ```bash
-jupyter notebook notebooks/train_cnn.ipynb
+jupyter notebook notebooks/train_cnn_MobileNet.ipynb
+```
+
+Or for EfficientNetB0:
+
+```bash
+jupyter notebook notebooks/train_cnn_EfficientNetB0.ipynb
 ```
 
 Follow the cells to:
